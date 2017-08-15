@@ -2,6 +2,8 @@
 
 (def esc-code "\033[")
 
+;TODO mapping escapes
+;....http://ascii-table.com/ansi-escape-sequences.php
 (defn get-escape-code
   "Get ecape code given quantity and operation identifier"
   ([op quantity]
