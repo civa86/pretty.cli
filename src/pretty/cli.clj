@@ -23,8 +23,10 @@
                 (cond
                   (= 65 last) (do
 
-                                (screen/clear!)
-                                ;(println "\033[K")
+                                (screen/cursor-save!)
+                                (screen/cursor-up! 3)
+                                (screen/delete-line! 2)
+                                (screen/cursor-restore!)
                                 )
                   (= 66 last) (println "DOWN")
 

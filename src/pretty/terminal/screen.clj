@@ -12,11 +12,27 @@
       (str esc-code op)))
   ([op] (get-escape-code op 0)))
 
+(defn cursor-save! []
+  "Save cursor position"
+  (print (get-escape-code "s")))
+
+(defn cursor-restore! []
+  "Save cursor position"
+  (println (get-escape-code "u")))
+
 (defn cursor-up!
   "Move cursor up in the shell"
-  ([num-lines] (println (get-escape-code "A" num-lines)))
+  ([num-lines] (print (get-escape-code "A" num-lines)))
   ([] (cursor-up! 2)))
 
+(defn delete-line!
+  "Delete k lines"
+  ([k] (->> (range 0 k)
+            (map (fn [x] (get-escape-code "K")))
+            (clojure.string/join "\n")
+            (println)))
+  ([] (delete-line! 1)))
+
 (defn clear! []
-  "clear shell screen"
+  "Clear shell screen"
   (println (get-escape-code "J" 2)))
