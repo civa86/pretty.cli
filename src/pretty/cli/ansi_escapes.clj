@@ -1,7 +1,6 @@
 (ns pretty.cli.ansi-escapes)
 
 (def esc-code "\033[")
-;(def esc-code "debug-")
 
 (defn cursor-to
   "Move the cursor to the 'x, y' cell"
