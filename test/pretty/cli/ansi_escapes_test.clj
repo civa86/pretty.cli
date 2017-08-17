@@ -20,14 +20,14 @@
     (is (= (cursor-up 5) "\033[5A")))
 
   (testing "cursor-down"
-    (is (= (cursor-up) "\033[1B"))
-    (is (= (cursor-up 5) "\033[5B")))
+    (is (= (cursor-down) "\033[1B"))
+    (is (= (cursor-down 5) "\033[5B")))
 
   (testing "cursor-forward"
-    (is (= (cursor-up) "\033[1C"))
-    (is (= (cursor-up 5) "\033[5C")))
+    (is (= (cursor-forward) "\033[1C"))
+    (is (= (cursor-forward 5) "\033[5C")))
 
   (testing "cursor-backward"
-    (is (= (cursor-up) "\033[1D"))
-    (is (= (cursor-up 5) "\033[5D")))
+    (is (= (cursor-backward) "\033[1D"))
+    (is (= (cursor-backward 5) "\033[5D")))
   )
