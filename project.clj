@@ -6,4 +6,6 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [com.github.lalyos/jfiglet "0.0.8"]
                  [jline "0.9.94"]]
+  ;TODO remove main...
+  :main ^:skip-aot pretty.cli
   :profiles {:dev {:plugins [[com.jakemccrary/lein-test-refresh "0.18.1"]]}})
