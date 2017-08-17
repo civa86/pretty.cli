@@ -1,6 +1,6 @@
 (ns pretty.cli.ansi-escapes)
 
-(def esc-code "\033[")
+(def esc-code "Escape code" "\033[")
 
 (defn cursor-to
   "Move the cursor to the 'x, y' cell"
@@ -8,8 +8,9 @@
   ([x] (str esc-code (+ x 1) "G"))
   ([x y] (str esc-code (+ y 1) ";" (+ x 1) "H")))
 
-(defn cursor-move [x y]
+(defn cursor-move
   "Move the cursor by 'x' and 'y' cells"
+  [x y]
   (let [x-code (if (< x 0) (str (- x) "D") (str x "C"))
         y-code (if (< y 0) (str (- y) "A") (str y "B"))]
     (str esc-code x-code esc-code y-code)))
@@ -36,70 +37,87 @@
 
 (defn cursor-left [] "Moves the cursor to the left" (str esc-code "G"))
 
-(defn cursor-position []
+(defn cursor-position
   "Retrieve the cursor position"
+  []
   (str esc-code "6n"))
 
-(defn cursor-position-save []
+(defn cursor-position-save
   "Save the cursor position"
+  []
   (str esc-code "s"))
 
-(defn cursor-position-restore []
+(defn cursor-position-restore
   "Restore the cursor position"
+  []
   (str esc-code "u"))
 
-(defn cursor-next-line []
+(defn cursor-next-line
   "Moves the cursor to beginning of the next line"
+  []
   (str esc-code "E"))
 
-(defn cursor-prev-line []
+(defn cursor-prev-line
   "Moves the cursor to beginning of the previous line"
+  []
   (str esc-code "F"))
 
-(defn cursor-hide []
+(defn cursor-hide
   "Hide the cursor"
+  []
   (str esc-code "?25l"))
 
-(defn cursor-show []
+(defn cursor-show
   "Show the cursor"
+  []
   (str esc-code "?25h"))
 
-(defn erase-end-line []
+(defn erase-end-line
   "Erase to the end of the line"
+  []
   (str esc-code "K"))
 
-(defn erase-start-line []
+(defn erase-start-line
   "Erase to the start of the line"
+  []
   (str esc-code "1K"))
 
-(defn erase-line []
+(defn erase-line
   "Erase the line"
+  []
   (str esc-code "2K"))
 
-(defn erase-down []
+(defn erase-down
   "Erase down"
+  []
   (str esc-code "J"))
 
-(defn erase-up []
+(defn erase-up
   "Erase up"
+  []
   (str esc-code "1J"))
 
-(defn erase-screen []
+(defn erase-screen
   "Erase the screen"
+  []
   (str esc-code "2J"))
 
-(defn scroll-up []
-  "Scroll up"
+(defn scroll-up
+  "Scroll screen up"
+  []
   (str esc-code "S"))
 
-(defn scroll-down []
-  "Scroll down"
+(defn scroll-down
+  "Scroll screen down"
+  []
   (str esc-code "T"))
 
-(defn clear-screen []
+(defn clear-screen
   "Clear screen"
+  []
   (str "\u001Bc"))
 
-(defn beep []
-  "beep"
+(defn beep
+  "Emit a beep"
+  []
   (str "\u0007"))
