@@ -2,6 +2,7 @@
   (:require [clojure.pprint]
             [pretty.terminal.screen :as screen]
             [pretty.cli.ansi-escapes :as esc]
+            [pretty.cli.figlet :as flf]
             [pretty.cli.prompt :as prompt])
   (:import jline.Terminal))
 
@@ -10,7 +11,8 @@
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-
+  (println (esc/clear-screen))
+  (println (flf/figlet "TEST"))
   (let [name (prompt/input "name")
         surname (prompt/input "surname")]
     (println (str "Hi " name " " surname))
