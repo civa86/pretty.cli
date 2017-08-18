@@ -35,7 +35,10 @@
   ([n] (str esc-code n "D"))
   ([] (cursor-backward 1)))
 
-(defn cursor-left [] "Moves the cursor to the left" (str esc-code "G"))
+(defn cursor-left
+  "Moves the cursor to the left"
+  []
+  (str esc-code "G"))
 
 (defn cursor-position
   "Retrieve the cursor position"
