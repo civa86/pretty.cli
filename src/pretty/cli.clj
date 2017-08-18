@@ -13,9 +13,8 @@
   [& args]
   (println (esc/clear-screen))
   (println (flf/figlet "TEST"))
-  (let [name (prompt/input "name")
-        surname (prompt/input "surname")]
-    (println (str "Hi " name " " surname))
+  (let [a (prompt/confirm "surname")]
+    (println (str "result " a))
     )
   ;(let [term (Terminal/getTerminal)]
   ;  (println "INIT")
