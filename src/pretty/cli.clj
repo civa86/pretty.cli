@@ -13,7 +13,7 @@
   [& args]
   (println (esc/clear-screen))
   (println (flf/figlet "TEST"))
-  (let [a (prompt/confirm "surname")]
+  (let [a (prompt/select-list "choose" [{:label "one" :value 1} {:label "two" :value 2}])]
     (println (str "result " a))
     )
   ;(let [term (Terminal/getTerminal)]
