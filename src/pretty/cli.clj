@@ -14,9 +14,9 @@
   (println (flf/figlet "TEST"))
   (let [
         first-name (prompt/input "First name")
-        gender (prompt/select-list "Gender" [{:label "Male" :value "M"} {:label "Female" :value "F"}])
         last-name (prompt/input "Last name")
-        ;confirm? (prompt/confirm "Are you sure")
+        gender (prompt/select-list "Gender" [{:label "Male" :value "M"} {:label "Female" :value "F"}])
+        confirm? (prompt/confirm "Are you sure")
         ]
 
 
