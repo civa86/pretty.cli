@@ -64,8 +64,10 @@
                                                (prompt-select-list question choices (mod (dec selected) num-opts) false false))
                                  (= 66 last) (do
                                                (clear-list! num-opts)
-                                               (prompt-select-list question choices (mod (inc selected) num-opts) false false)))))))
-        ))))
+                                               (prompt-select-list question choices (mod (inc selected) num-opts) false false))))))
+          :else (do
+                  (clear-list! num-opts)
+                  (prompt-select-list question choices selected false false)))))))
 
 ; Public functions
 
