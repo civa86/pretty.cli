@@ -44,7 +44,7 @@
 
     (let [term (Terminal/getTerminal)
           num-opts (count choices)
-          tip (if (= true first-rendering?) (c/dim " (Move with arrow up/down. Submit with ENTER)") "")]
+          tip (if (= true first-rendering?) (c/dim " (UP/DOWN move, ENTER submit)") "")]
       (println (str "[" (c/green "?") "] " question ":" tip))
       (doseq [opt (get-list-options choices selected)]
         (println opt))
