@@ -34,40 +34,40 @@
 (defn- prompt-select-list
   "Prompt a list of elements with 1 selected answer" ;TODO write right desc...
   [question choices selected submitted? first-rendering?]
+  (let [term (Terminal/getTerminal)]
+    (if (= true submitted?)
+      (let [opt-selected (nth choices selected nil)
+            opt-selected-label (if (string? opt-selected) opt-selected (get opt-selected :label))
+            opt-selected-val (if (string? opt-selected) opt-selected (get opt-selected :value))]
+        (.restoreTerminal term)
+        (println (str "[" (c/green "▸") "] " question ": " (c/cyan opt-selected-label)))
+        opt-selected-val)
 
-  (if (= true submitted?)
-    (let [opt-selected (nth choices selected nil)
-          opt-selected-label (if (string? opt-selected) opt-selected (get opt-selected :label))
-          opt-selected-val (if (string? opt-selected) opt-selected (get opt-selected :value))]
-      (println (str "[" (c/green "▸") "] " question ": " (c/cyan opt-selected-label)))
-      opt-selected-val)
+      (let [num-opts (count choices)
+            tip (if (= true first-rendering?) (c/dim " (UP/DOWN move, ENTER submit)") "")]
+        (println (str "[" (c/green "?") "] " question ":" tip))
+        (doseq [opt (get-list-options choices selected)]
+          (println opt))
 
-    (let [term (Terminal/getTerminal)
-          num-opts (count choices)
-          tip (if (= true first-rendering?) (c/dim " (UP/DOWN move, ENTER submit)") "")]
-      (println (str "[" (c/green "?") "] " question ":" tip))
-      (doseq [opt (get-list-options choices selected)]
-        (println opt))
+        (let [pressed (.readCharacter term System/in)]
+          (cond
+            (= 10 pressed) (do
+                             (clear-list! num-opts)
+                             (prompt-select-list question choices selected true false))
 
-      (let [pressed (.readCharacter term System/in)]
-        (cond
-          (= 10 pressed) (do
-                           (clear-list! num-opts)
-                           (prompt-select-list question choices selected true false))
-
-          (= 27 pressed) (let [next (.readCharacter term System/in)]
-                           (if (= 91 next)
-                             (let [last (.readCharacter term System/in)]
-                               (cond
-                                 (= 65 last) (do
-                                               (clear-list! num-opts)
-                                               (prompt-select-list question choices (mod (dec selected) num-opts) false false))
-                                 (= 66 last) (do
-                                               (clear-list! num-opts)
-                                               (prompt-select-list question choices (mod (inc selected) num-opts) false false))))))
-          :else (do
-                  (clear-list! num-opts)
-                  (prompt-select-list question choices selected false false)))))))
+            (= 27 pressed) (let [next (.readCharacter term System/in)]
+                             (if (= 91 next)
+                               (let [last (.readCharacter term System/in)]
+                                 (cond
+                                   (= 65 last) (do
+                                                 (clear-list! num-opts)
+                                                 (prompt-select-list question choices (mod (dec selected) num-opts) false false))
+                                   (= 66 last) (do
+                                                 (clear-list! num-opts)
+                                                 (prompt-select-list question choices (mod (inc selected) num-opts) false false))))))
+            :else (do
+                    (clear-list! num-opts)
+                    (prompt-select-list question choices selected false false))))))))
 
 ; Public functions
 
