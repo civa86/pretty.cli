@@ -2,6 +2,10 @@
   (:require [clojure.test :refer :all]
             [pretty.cli.colors :refer :all]))
 
+(deftest disabled-color-test
+  (testing "dim"
+    (is (= (dim "test") "\033[2mtest\033[0m"))))
+
 (deftest foreground-colors-test
   (testing "[FG COLOR] black"
     (is (= (black "test") "\033[30mtest\033[0m")))

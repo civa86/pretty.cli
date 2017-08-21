@@ -12,6 +12,8 @@
      (str esc/esc-code (+ c color-val) "m" txt reset-color-code)))
   ([color-val txt] (build-color-code color-val txt false)))
 
+(defn dim "Disabled text color" [txt] (str esc/esc-code "2m" txt reset-color-code))
+
 (defn black "Text color black" [txt] (build-color-code 0 txt))
 (defn red "Text color red" [txt] (build-color-code 1 txt))
 (defn green "Text color green" [txt] (build-color-code 2 txt))

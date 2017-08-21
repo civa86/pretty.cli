@@ -10,4 +10,5 @@
   ;TODO remove main...
   :main ^:skip-aot pretty.cli
 
-  :profiles {:dev {:plugins [[com.jakemccrary/lein-test-refresh "0.18.1"]]}})
+  :profiles {:dev {:plugins [[com.jakemccrary/lein-test-refresh "0.18.1"]
+                             [lein-codox "0.10.3"]]}})

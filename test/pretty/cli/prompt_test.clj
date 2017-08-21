@@ -25,5 +25,4 @@
     (with-redefs [read-line (fn [] "")]
       (is (= true (confirm "test-question")))
       (is (= true (confirm "test-question" true)))
-      (is (= false (confirm "test-question" false)))))
-  )
+      (is (= false (confirm "test-question" false))))))

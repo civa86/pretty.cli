@@ -1,6 +1,5 @@
 (ns pretty.cli
   (:require [clojure.pprint]
-            [pretty.terminal.screen :as screen]
             [pretty.cli.ansi-escapes :as esc]
             [pretty.cli.figlet :as flf]
             [pretty.cli.prompt :as prompt])
