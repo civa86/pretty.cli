@@ -1,6 +1,7 @@
 (ns pretty.cli.ansi-escapes)
-
-(def esc-code "Escape code" "\033[")
+;TODO fn docs
+(def esc-code "Returns the escape code" "\033[")
+(def reset-code "Returns the code to reset all attributes" (str esc-code "0m"))
 
 (defn cursor-to
   "Move the cursor to the 'x, y' cell"

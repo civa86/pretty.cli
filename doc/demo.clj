@@ -1,16 +1,14 @@
-(ns pretty.cli
-  (:require [clojure.pprint]
-            [pretty.cli.ansi-escapes :as esc]
+(ns demo
+  (:require [pretty.cli.ansi-escapes :as esc]
+            [pretty.cli.colors :as c]
             [pretty.cli.figlet :as flf]
             [pretty.cli.prompt :as prompt]))
 
-
-
-(defn meeting
-  "Meet my user"
+(defn -main
+  "Demo usage of pretty.cli utilities"
   []
   (println (esc/clear-screen))
-  (println (flf/figlet "Welcome"))
+  (println (c/cyan (flf/figlet "Welcome")))
   (let [first-name (prompt/input "First name" (fn [x] (if (= "" x) "Sorry?")))
         last-name (prompt/input "Last name" (fn [x] (if (= "" x) "Sorry?")))
         gender (prompt/list-select "Gender" [{:label "Male" :value "M"} {:label "Female" :value "F"}])
@@ -19,14 +17,7 @@
     (if (= true confirm?)
       (do
         (println (esc/clear-screen))
-        (println (flf/figlet (str "Hi, " (if (= "M" gender) "Mr." "Ms.")) "starwars"))
-        (println (flf/figlet first-name))
-        (println (flf/figlet last-name)))
-      (meeting))))
-
-(defn -main
-  "Main..."
-  [& args]
-
-  (prompt/list-checkbox "asd" [{:label "one" :value "1" :checked true} {:label "two" :value "2"}])
-  )
+        (println (c/black-bg (c/cyan (flf/figlet (str "Hi, " (if (= "M" gender) "Mr." "Ms.")) "starwars"))))
+        (println (c/black-bg (c/magenta (flf/figlet first-name))))
+        (println (c/black-bg (c/yellow (flf/figlet last-name)))))
+      (-main))))

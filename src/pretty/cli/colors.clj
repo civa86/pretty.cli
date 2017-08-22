@@ -1,18 +1,20 @@
 (ns pretty.cli.colors
   (:require [pretty.cli.ansi-escapes :as esc]))
-
-(def reset-color-code (str esc/esc-code "0m"))
-(def fg-const 30)
-(def bg-const 40)
+;TODO fn docs
+(def ^:private fg-const 30)
+(def ^:private bg-const 40)
 
 (defn- build-color-code
   "Build color code string"
   ([color-val txt is-background?]
    (let [c (if (= true is-background?) bg-const fg-const)]
-     (str esc/esc-code (+ c color-val) "m" txt reset-color-code)))
+     (str esc/esc-code (+ c color-val) "m" txt esc/reset-code)))
   ([color-val txt] (build-color-code color-val txt false)))
 
-(defn dim "Disabled text color" [txt] (str esc/esc-code "2m" txt reset-color-code))
+(defn txt-bold "Return txt with bold display attribute" [txt] (str esc/esc-code "1m" txt esc/reset-code))
+(defn txt-dim "Return txt with dim display attribute" [txt] (str esc/esc-code "2m" txt esc/reset-code))
+(defn txt-underscore "Return txt with underscore display attribute" [txt] (str esc/esc-code "4m" txt esc/reset-code))
+(defn txt-blink "Return txt with blink display attribute" [txt] (str esc/esc-code "5m" txt esc/reset-code))
 
 (defn black "Text color black" [txt] (build-color-code 0 txt))
 (defn red "Text color red" [txt] (build-color-code 1 txt))

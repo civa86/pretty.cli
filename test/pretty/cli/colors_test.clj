@@ -2,9 +2,18 @@
   (:require [clojure.test :refer :all]
             [pretty.cli.colors :refer :all]))
 
-(deftest disabled-color-test
-  (testing "dim"
-    (is (= (dim "test") "\033[2mtest\033[0m"))))
+(deftest display-attributes-test
+  (testing "txt-bold"
+    (is (= (txt-bold "test") "\033[1mtest\033[0m")))
+
+  (testing "txt-dim"
+    (is (= (txt-dim "test") "\033[2mtest\033[0m")))
+
+  (testing "txt-underscore"
+    (is (= (txt-underscore "test") "\033[4mtest\033[0m")))
+
+  (testing "txt-blink"
+    (is (= (txt-blink "test") "\033[5mtest\033[0m"))))
 
 (deftest foreground-colors-test
   (testing "[FG COLOR] black"

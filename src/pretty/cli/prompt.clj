@@ -4,7 +4,7 @@
             [schema.core :as s]
             [clojure.string :as str])
   (:import [jline Terminal]))
-
+;TODO fn docs
 (s/defschema ^:private CHOICE {(s/required-key :label)   (s/constrained s/Str #(not (clojure.string/blank? %)))
                                (s/required-key :value)   (s/constrained s/Str #(not (clojure.string/blank? %)))
                                (s/optional-key :checked) s/Bool})
@@ -76,7 +76,7 @@
         opt-selected-val)
 
       (let [num-opts (count choices)
-            tip (if (= true first-rendering?) (c/dim " (UP/DOWN move, ENTER submit)") "")]
+            tip (if (= true first-rendering?) (c/txt-dim " (UP/DOWN move, ENTER submit)") "")]
         (println (str "[" (c/green "?") "] " question ":" tip))
         (doseq [opt (get-list-options choices selected)]
           (println opt))
@@ -120,7 +120,7 @@
         selected-choices)
 
       (let [num-opts (count choices)
-            tip (if (= true first-rendering?) (c/dim " (UP/DOWN move, SPACE check/uncheck, ENTER submit)") "")]
+            tip (if (= true first-rendering?) (c/txt-dim " (UP/DOWN move, SPACE check/uncheck, ENTER submit)") "")]
         (println (str "[" (c/green "?") "] " question ":" tip))
         (doseq [opt (get-check-list-options choices selected)]
           (println opt))
