@@ -1,9 +1,20 @@
 (ns pretty.cli.prompt
   (:require [pretty.cli.colors :as c]
-            [pretty.cli.ansi-escapes :as esc])
+            [pretty.cli.ansi-escapes :as esc]
+            [schema.core :as s])
   (:import [jline Terminal]))
 
+(s/defschema CHOICE {(s/required-key :label) (s/constrained s/Str #(not (clojure.string/blank? %)))
+                     (s/required-key :value) (s/constrained s/Str #(not (clojure.string/blank? %)))
+                     (s/optional-key :checked) s/Bool})
+
 ;Private functions
+
+(defn- validate-choices!
+  "Validate the choices set"
+  [choices]
+  (doseq [c choices]
+    (s/validate CHOICE c)))
 
 (defn- clear-list!
   "Clear the current printed list"
@@ -26,7 +37,7 @@
   "Return the options list, ready to be printed"
   [opts selected]
   (map-indexed (fn [i opt]
-                 (let [opt-label (if (string? opt) opt (get opt :label))]
+                 (let [opt-label (get opt :label)]
                    (if (= i selected)
                      (c/cyan (str " ▸  " opt-label))
                      (str "    " opt-label)))) opts))
@@ -35,20 +46,26 @@
   "Return the options list, ready to be printed"
   [opts selected]
   (map-indexed (fn [i opt]
-                 (let [opt-label (if (string? opt) opt (get opt :label))]
+                 (let [opt-label (get opt :label)
+                       opt-checked-label (if (= true (get opt :checked))
+                                           (str (c/yellow "◉  ") opt-label)
+                                           (str "◯  " opt-label))]
                    (if (= i selected)
-                     (c/cyan (str " ▸  " opt-label))
-                     (str "    " opt-label)))) opts))
+                     (str (c/cyan " ▸  ") opt-checked-label)
+                     (str "    " opt-checked-label)))) opts))
 
 (defn- prompt-select-list
   "Prompt a list of elements with 1 selected answer" ;TODO write right desc...
   [question choices selected submitted? first-rendering?]
+  (validate-choices! choices)
   (let [term (Terminal/getTerminal)]
+    (print (esc/cursor-hide))
     (if (= true submitted?)
       (let [opt-selected (nth choices selected nil)
-            opt-selected-label (if (string? opt-selected) opt-selected (get opt-selected :label))
-            opt-selected-val (if (string? opt-selected) opt-selected (get opt-selected :value))]
+            opt-selected-label (get opt-selected :label)
+            opt-selected-val (get opt-selected :value)]
         (.restoreTerminal term)
+        (print (esc/cursor-show))
         (println (str "[" (c/green "▸") "] " question ": " (c/cyan opt-selected-label)))
         opt-selected-val)
 
@@ -81,44 +98,44 @@
 (defn- prompt-check-list
   "TODO write right desc..."
   [question choices selected submitted? first-rendering?]
-  (clojure.pprint/pprint choices)
-  ;(let [term (Terminal/getTerminal)]
-  ;  (if (= true submitted?)
-  ;    (println "asd")
-  ;    ;(let [opt-selected (nth choices selected nil)
-  ;    ;      opt-selected-label (if (string? opt-selected) opt-selected (get opt-selected :label))
-  ;    ;      opt-selected-val (if (string? opt-selected) opt-selected (get opt-selected :value))]
-  ;    ;  (.restoreTerminal term)
-  ;    ;  (println (str "[" (c/green "▸") "] " question ": " (c/cyan opt-selected-label)))
-  ;    ;  opt-selected-val)
-  ;
-  ;    (let [num-opts (count choices)
-  ;          tip (if (= true first-rendering?) (c/dim " (UP/DOWN move, ENTER submit)") "")]
-  ;      (println (str "[" (c/green "?") "] " question ":" tip))
-  ;      (doseq [opt (get-check-list-options choices selected)]
-  ;        (println opt))
-  ;
-  ;      ;(let [pressed (.readCharacter term System/in)]
-  ;      ;  (cond
-  ;      ;    (= 10 pressed) (do
-  ;      ;                     (clear-list! num-opts)
-  ;      ;                     (prompt-select-list question choices selected true false))
-  ;      ;
-  ;      ;    (= 27 pressed) (let [next (.readCharacter term System/in)]
-  ;      ;                     (if (= 91 next)
-  ;      ;                       (let [last (.readCharacter term System/in)]
-  ;      ;                         (cond
-  ;      ;                           (= 65 last) (do
-  ;      ;                                         (clear-list! num-opts)
-  ;      ;                                         (prompt-select-list question choices (mod (dec selected) num-opts) false false))
-  ;      ;                           (= 66 last) (do
-  ;      ;                                         (clear-list! num-opts)
-  ;      ;                                         (prompt-select-list question choices (mod (inc selected) num-opts) false false))))))
-  ;      ;    :else (do
-  ;      ;            (clear-list! num-opts)
-  ;      ;            (prompt-select-list question choices selected false false))))
-  ;      ;
-  ;      )))
+  (validate-choices! choices)
+  (let [term (Terminal/getTerminal)]
+    (print (esc/cursor-hide))
+    (if (= true submitted?)
+      (let [opt-selected (nth choices selected nil)
+            opt-selected-label (get opt-selected :label)
+            opt-selected-val (get opt-selected :value)]
+        (.restoreTerminal term)
+        (print (esc/cursor-show))
+        (println (str "[" (c/green "▸") "] " question ": " (c/cyan opt-selected-label)))
+        opt-selected-val)
+
+      (let [num-opts (count choices)
+            tip (if (= true first-rendering?) (c/dim " (UP/DOWN move, SPACE check/uncheck, ENTER submit)") "")]
+        (println (str "[" (c/green "?") "] " question ":" tip))
+        (doseq [opt (get-check-list-options choices selected)]
+          (println opt))
+
+        (let [pressed (.readCharacter term System/in)]
+          (cond
+            (= 10 pressed) (do
+                             (clear-list! num-opts)
+                             (prompt-select-list question choices selected true false))
+
+            (= 27 pressed) (let [next (.readCharacter term System/in)]
+                             (if (= 91 next)
+                               (let [last (.readCharacter term System/in)]
+                                 (cond
+                                   (= 65 last) (do
+                                                 (clear-list! num-opts)
+                                                 (prompt-check-list question choices (mod (dec selected) num-opts) false false))
+                                   (= 66 last) (do
+                                                 (clear-list! num-opts)
+                                                 (prompt-check-list question choices (mod (inc selected) num-opts) false false))))))
+            :else (do
+                    (clear-list! num-opts)
+                    (prompt-select-list question choices selected false false))))
+        )))
 
   )
 
@@ -167,7 +184,13 @@
 (defn select-list
   "Prompt a list of elements with 1 selected answer"
   [question choices]
-  (prompt-select-list question choices 0 false true))
+  (as-> choices ch
+        (map #(if (string? %) (-> {}
+                                  (assoc :label %)
+                                  (assoc :value %))
+                              %
+                              ) ch)
+        (prompt-select-list question ch 0 false true)))
 
 (defn check-list
   "TODO"
@@ -176,5 +199,7 @@
        (map #(if (string? %) (-> {}
                                  (assoc :label %)
                                  (assoc :value %)
-                                 (assoc :checked false))) ch)
+                                 (assoc :checked false))
+                             %
+                             ) ch)
         (prompt-check-list question ch 0 false true)))

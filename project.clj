@@ -4,6 +4,7 @@
   :license {:name "MIT"
             :url "https://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.8.0"]
+                 [prismatic/schema "1.1.6"]
                  [com.github.lalyos/jfiglet "0.0.8"]
                  [jline "0.9.94"]]
 

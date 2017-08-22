@@ -28,5 +28,5 @@
   "Main..."
   [& args]
 
-  (prompt/check-list "asd" ["1" "2"])
+  (prompt/check-list "asd" [{:label "one" :value "1" :checked true} {:label "two" :value "2"}])
   )
