@@ -5,9 +5,9 @@
             [clojure.string :as str])
   (:import [jline Terminal]))
 
-(s/defschema CHOICE {(s/required-key :label) (s/constrained s/Str #(not (clojure.string/blank? %)))
-                     (s/required-key :value) (s/constrained s/Str #(not (clojure.string/blank? %)))
-                     (s/optional-key :checked) s/Bool})
+(s/defschema ^:private CHOICE {(s/required-key :label)   (s/constrained s/Str #(not (clojure.string/blank? %)))
+                               (s/required-key :value)   (s/constrained s/Str #(not (clojure.string/blank? %)))
+                               (s/optional-key :checked) s/Bool})
 
 ;Private functions
 
@@ -62,7 +62,7 @@
   (print (esc/cursor-show)))
 
 (defn- prompt-select-list
-  "Prompt a list of elements with 1 selected answer" ;TODO write right desc...
+  "Prompt a list of elements with 1 selected answer"        ;TODO write right desc...
   [question choices selected submitted? first-rendering?]
   (validate-choices! choices)
   (let [term (Terminal/getTerminal)]
@@ -114,7 +114,9 @@
                                   (map #(get % :value)))]
         (.restoreTerminal term)
         (print (esc/cursor-show))
-        (println (str "[" (c/green "▸") "] " question ": " (c/cyan (str/join ", " selected-choices))))
+        (println (str "[" (c/green "▸") "] " question ": " (c/cyan (if (> (count selected-choices) 0)
+                                                                     (str/join ", " selected-choices)
+                                                                     "-"))))
         selected-choices)
 
       (let [num-opts (count choices)
@@ -193,7 +195,7 @@
                  (confirm question default-value))))))
   ([question] (confirm question true)))
 
-(defn select-list
+(defn list-select
   "Prompt a list of elements with 1 selected answer"
   [question choices]
   (as-> choices ch
@@ -204,14 +206,14 @@
                               ) ch)
         (prompt-select-list question ch 0 false true)))
 
-(defn check-list
+(defn list-checkbox
   "TODO"
   [question choices]
   (as-> choices ch
-       (map #(if (string? %) (-> {}
-                                 (assoc :label %)
-                                 (assoc :value %)
-                                 (assoc :checked false))
-                             %
-                             ) ch)
+        (map #(if (string? %) (-> {}
+                                  (assoc :label %)
+                                  (assoc :value %)
+                                  (assoc :checked false))
+                              %
+                              ) ch)
         (prompt-check-list question ch 0 false true)))
