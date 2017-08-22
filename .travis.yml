@@ -1,12 +1,21 @@
 language: clojure
-script: lein test
 cache:
   directories:
   - $HOME/.m2
+script: lein test
 jdk:
   - openjdk7
   - oraclejdk7
   - oraclejdk8
+after_success: lein deploy clojars
+before_deploy: lein codox
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: target/doc
+  on:
+    branch: master
 branches:
   only:
   - master
