@@ -4,18 +4,21 @@ cache:
   - $HOME/.m2
 script: lein test
 jdk:
-  - openjdk7
-  - oraclejdk7
-  - oraclejdk8
-after_success: lein deploy clojars
+- openjdk7
+- oraclejdk7
+- oraclejdk8
 before_deploy: lein codox
 deploy:
-  provider: pages
+- provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   local_dir: target/doc
   on:
     branch: master
+    jdk: oraclejdk8
 branches:
   only:
   - master
+env:
+  global:
+    secure: RShYPLv/mdht4NYg826mEMJHx4rykdkDUUmTWSGvieGlGjOXpwRurxHlEzcxNa0euBCo9jIams4KwnZH7qrxxlisuffPpJzjv6gp1dTcP839dSG554qSBkCU4aoBdV0joz4+Olj6z2bKybzzpKPvLSjjDCR0oH2+pLbzPVyId+wobbxxfpDRS/cIhOno/A2/ennG4CwcsMnl7g/d9DEipJ69/0Nu/QbTle5gebHT0skJWxBeXcKVyshU4lGgq2JmqYSdKdVdt1MrXy1LD8hlFoWzsS3DP9yj4H6G7YvGLogmXmR9qhlKRla2vURMxxAn47uydUeYHNxM5qoydBi2QXAlNv1Qfl9ILmFk7tdnfOgAjjzTNFkaYYtx5ReEgUG6b403lX3udmJLwPtXDrYNk/q29NzCCKpm8R5PXXD+YyAYdbPz+uPvBeiDvPViyCTI2s1T3y4aCv1wAFjsIc8epTu7g/sRsqAamAwdbRLfWrZb+OR5VdQQ+ibSAov+iwrAm4bGdGbFUkdreSPr1yEJ5tQfq9ioz8y5UQTEeDFVDXUGvwb720fMx7AfNv4gD/rEqofwrHsAfLTdqjxvS5KRiC/X/tuat3I7PruI4g0QrmD/N6Gvat1dxPAbCjnCMqtIHVch8e3Jg/pIvHp2uEPljn1HsFjpITeeHqtZVuu/OnI=
