@@ -9,19 +9,14 @@ jdk:
 - oraclejdk8
 before_deploy: lein codox
 deploy:
-- provider: pages
+  provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   local_dir: target/doc
   on:
     branch: master
     jdk: oraclejdk8
-- provider: script
-  script: lein deploy clojars
-  skip_cleanup: true
-  on:
-    branch: master
-    jdk: oraclejdk8
+after_deploy: lein deploy clojars
 branches:
   only:
   - master
