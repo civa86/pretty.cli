@@ -7,5 +7,8 @@
                  [prismatic/schema "1.1.6"]
                  [com.github.lalyos/jfiglet "0.0.8"]
                  [jline "0.9.94"]]
+  :deploy-repositories [["releases" {:url "https://clojars.org/repo/"
+                                     :username :env/clojars_user
+                                     :password :env/clojars_passwd}]]
   :profiles {:dev {:plugins [[com.jakemccrary/lein-test-refresh "0.18.1"]
                              [lein-codox "0.10.3"]]}})
