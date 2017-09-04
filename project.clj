@@ -8,7 +8,8 @@
                  [com.github.lalyos/jfiglet "0.0.8"]
                  [jline "0.9.94"]
                  [codox-theme-rdash "0.1.2"]]
-  :codox {:metadata {:doc/format :markdown}
+  :codox {:project {:name "Pretty CLI"}
+          :metadata {:doc/format :markdown}
           :themes [:rdash]
           :html {:namespace-list :flat}
           :source-uri "https://github.com/civa86/pretty.cli/blob/v{version}/{filepath}#L{line}"}
