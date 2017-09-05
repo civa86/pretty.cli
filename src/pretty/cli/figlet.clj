@@ -23,7 +23,8 @@
   usaflag, wavy, weird.
   "
   ([text font]
-   (-> (str "resources/fonts/" font ".flf")
+   (-> (str "fonts/" font ".flf")
+       (io/resource)
        (io/input-stream)
        (FigletFont/convertOneLine text)))
   ([text] (figlet text "standard")))
