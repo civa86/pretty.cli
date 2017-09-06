@@ -22,11 +22,9 @@ clear the screen, move the cursor, delete lines and many more
 (use 'pretty.cli.ansi-escapes)
 (println "Here")
 (println "First")
-(Thread/sleep 2000)
-(println (cursor-up 2)) ;Move the cursor UP
+(println (cursor-up 2))
 (println "Second")
-(Thread/sleep 2000)
-(println (clear-screen)) ;Clear the whole screen
+(println (clear-screen))
 ```
 
 ![ANSI Escapes](doc/img/ansi_esc.gif "ANSI Escapes")
@@ -73,8 +71,8 @@ free input with validation, confirmation, select list and checkbox options
 ```clojure
 (use 'pretty.cli.prompt)
 (input "What's your name" (fn [x] (if (= "" x) "Sorry?")))
-(list-select "Gender" [{:label "Male" :value "M"} {:label "Female" :value "F"}])
-(list-checkbox "Favorite Music" ["Jazz" "Hip-Hop" "Drun & Bass" "Techno"])
+(list-select "Choose your meal" ["Pasta" "Pizza" "Hamburger" "Salad"])
+(list-checkbox "Add toppings" ["Bacon" "Cheese" "Onions" "Eggs"])
 (confirm "Are you sure")
 ```
 
