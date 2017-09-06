@@ -1,4 +1,4 @@
-(defproject org.clojars.civa86/pretty.cli "0.6.1"
+(defproject org.clojars.civa86/pretty.cli "0.6.2"
   :description "Clojure utilities to create amazing Command Line Interfaces"
   :url "https://github.com/civa86/pretty.cli"
   :license {:name "MIT"
