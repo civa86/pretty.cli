@@ -18,5 +18,6 @@
                                     :password      :env/clojars_passwd
                                     :sign-releases false}]]
   :profiles {:dev {:plugins [[com.jakemccrary/lein-test-refresh "0.18.1"]
+                             [lein-exec "0.3.6"]
                              [lein-codox "0.10.3"]]}})
 
