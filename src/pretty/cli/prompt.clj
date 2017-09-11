@@ -4,7 +4,7 @@
             [schema.core :as s]
             [clojure.string :as str])
   (:import [jline Terminal]))
-;TODO fn docs
+
 (s/defschema ^:private CHOICE {(s/required-key :label)   (s/constrained s/Str #(not (clojure.string/blank? %)))
                                (s/required-key :value)   (s/constrained s/Str #(not (clojure.string/blank? %)))
                                (s/optional-key :checked) s/Bool})
@@ -12,7 +12,7 @@
 ;Private functions
 
 (defn- validate-choices!
-  "Validate the choices set"
+  "Validate the choices set according to CHOICE structure"
   [choices]
   (doseq [c choices]
     (s/validate CHOICE c)))
@@ -44,7 +44,7 @@
                      (str "    " opt-label)))) opts))
 
 (defn- get-check-list-options
-  "Return the options list, ready to be printed"
+  "Return the options list with checkboxes, ready to be printed"
   [opts selected]
   (map-indexed (fn [i opt]
                  (let [opt-label (get opt :label)
@@ -62,7 +62,7 @@
   (print (esc/cursor-show)))
 
 (defn- prompt-select-list
-  "Prompt a list of elements with 1 selected answer"        ;TODO write right desc...
+  "Prompt a list of options and wait for user to select one of them"
   [question choices selected submitted? first-rendering?]
   (validate-choices! choices)
   (let [term (Terminal/getTerminal)]
@@ -103,7 +103,7 @@
                     (prompt-select-list question choices selected false false))))))))
 
 (defn- prompt-check-list
-  "TODO write right desc..."
+  "Prompt a list of options and wait for user to check and select some of them"
   [question choices selected submitted? first-rendering?]
   (validate-choices! choices)
   (let [term (Terminal/getTerminal)]
@@ -156,7 +156,11 @@
 ; Public functions
 
 (defn input
-  "Prompt question with free input answer"
+  "Prompt a `question` and wait for user to insert a free input string.<br/>
+  Input can be validated if `validate-fn` is passed as function that returns:<br/>
+  - nil if input is valid.<br/>
+  - String error if input is not valid. Returned String is displayed with an error style.
+  "
   ([question validate-fn]
    (print (str "[" (c/green "?") "] " question ": "))
    (flush)
@@ -172,7 +176,14 @@
   ([question] (input question nil)))
 
 (defn confirm
-  "Prompt confirmation with y/n answer"
+  "Prompt a `question` and wait for user to reply yes or no.
+
+  Accepted inputs are:<br/>
+  - y | Y | yes | YES<br/>
+  - n | N | no  | NO
+
+  `default-value` is a boolean and can set the default selected option, true for Yes and false for No.
+  "
   ([question default-value]
    (let [opt-yes (if (= true default-value) "Y" "y")
          opt-no (if (= false default-value) "N" "n")]
@@ -180,12 +191,12 @@
      (flush)
      (let [answer (read-line)]
        (cond
-         (or (and (= "" answer) (= true default-value)) (not (nil? (re-matches #"y|Y|yes" answer))))
+         (or (and (= "" answer) (= true default-value)) (not (nil? (re-matches #"y|Y|yes|YES" answer))))
          (do
            (print-submitted-input! (str "[" (c/green "▸") "] " question "? " (c/cyan "Yes")))
            true)
 
-         (or (and (= "" answer) (= false default-value)) (not (nil? (re-matches #"n|N|no" answer))))
+         (or (and (= "" answer) (= false default-value)) (not (nil? (re-matches #"n|N|no|NO" answer))))
          (do
            (print-submitted-input! (str "[" (c/green "▸") "] " question "? " (c/cyan "No")))
            false)
@@ -196,7 +207,23 @@
   ([question] (confirm question true)))
 
 (defn list-select
-  "Prompt a list of elements with 1 selected answer"
+  "Prompt a `question` with a list of `choices` and wait for user to select one of them
+
+  Choices can be:
+
+  ```clojure
+  ; List of strings. Same label and value.
+
+  [ \"One\" \"Two\" \"Three\" ]
+
+  ; List of maps.
+  [
+    {:label \"One\" :value \"1\"}
+    {:label \"Two\" :value \"2\"}
+    {:label \"Three\" :value \"3\"}
+  ]
+  ```
+  "
   [question choices]
   (as-> choices ch
         (map #(if (string? %) (-> {}
@@ -207,7 +234,22 @@
         (prompt-select-list question ch 0 false true)))
 
 (defn list-checkbox
-  "TODO"
+  "Prompt a `question` with a list of `choices` and wait for user to check and select some of them.
+
+  Choices can be:
+
+  ```clojure
+  ; List of strings. Same label and value, none is checked by default.
+  [ \"One\" \"Two\" \"Three\" ]
+
+  ; List of maps.
+  [
+    {:label \"One\" :value \"1\" :checked true}
+    {:label \"Two\" :value \"2\" :checked false}
+    {:label \"Three\" :value \"3\" :checked false}
+  ]
+  ```
+  "
   [question choices]
   (as-> choices ch
         (map #(if (string? %) (-> {}
