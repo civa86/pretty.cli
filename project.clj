@@ -1,4 +1,4 @@
-(defproject org.clojars.civa86/pretty.cli "0.6.2"
+(defproject org.clojars.civa86/pretty.cli "1.0.0"
   :description "Clojure utilities to create amazing Command Line Interfaces"
   :url "https://github.com/civa86/pretty.cli"
   :license {:name "MIT"
@@ -18,5 +18,6 @@
                                     :password      :env/clojars_passwd
                                     :sign-releases false}]]
   :profiles {:dev {:plugins [[com.jakemccrary/lein-test-refresh "0.18.1"]
+                             [lein-exec "0.3.6"]
                              [lein-codox "0.10.3"]]}})
 

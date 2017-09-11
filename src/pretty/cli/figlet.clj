@@ -3,7 +3,7 @@
   (:import [com.github.lalyos.jfiglet FigletFont]))
 
 (defn figlet
-  "Return txt string transformed in ascii art banner with specified font (default: standard.flf)
+  "Return `txt` string transformed in ascii art banner with specified `font` (default: standard.flf)
 
   ---------------------------------
   FONT LIST (http://www.figlet.org)
