@@ -83,4 +83,4 @@
     (is (= (clear-screen) "\u001Bc")))
 
   (testing "beep"
-    (is (= (beep) "\u0007"))))
+    (is (= (beep) "\0007"))))
